@@ -1,0 +1,7 @@
+name: sga_quast
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - quast

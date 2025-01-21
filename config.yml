@@ -1,2 +1,4 @@
 sbx_sga:
-  example_rule_options: 'DUMMY STRING'
+  mash_ref: RefSeq88n.msh
+  checkm_ref: /mnt/isilon/marc_genomics/shared_data/CheckM2_database/uniref100.KO.1.dmnd
+  bakta_ref: /mnt/isilon/marc_genomics/shared_data/bakta_db_5/db/

@@ -1,6 +1,6 @@
-name: sbx_sga
+name: sga_shovill
 channels:
   - conda-forge
   - bioconda
 dependencies:
-  - samtools
+  - shovill

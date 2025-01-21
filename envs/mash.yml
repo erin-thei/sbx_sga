@@ -1,0 +1,6 @@
+name: sga_mash
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - mash

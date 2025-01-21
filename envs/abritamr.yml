@@ -1,0 +1,7 @@
+name: sga_abritamr
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - abritamr
