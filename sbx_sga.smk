@@ -27,7 +27,6 @@ localrules:
 rule all_sga:
     input:
         # QC
-        #expand(ISOLATE_FP / "fastqc" / "{sample}_{rp}_fastqc/fastqc_data.txt", rp=Pairs, sample=Samples),
         expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples),
         # Assembly QC
         ISOLATE_FP / "checkm" / "quality_report.tsv",

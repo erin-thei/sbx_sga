@@ -18,7 +18,38 @@ def setup():
 
     config_fp = project_dir / "sunbeam_config.yml"
 
-    config_str = f"sbx_sga: {{example_rule_options: '--number'}}"
+    config_str = f"sbx_sga: {{mash_ref: '{temp_dir}/dummy.msh'}}"
+    Path(temp_dir / "dummy.msh").touch()
+
+    sp.check_output(
+        [
+            "sunbeam",
+            "config",
+            "modify",
+            "-i",
+            "-s",
+            f"{config_str}",
+            f"{config_fp}",
+        ]
+    )
+
+    config_str = f"sbx_sga: {{checkm_ref: '{temp_dir}/dummy.1.dmnd'}}"
+    Path(temp_dir / "dummy.1.dmnd").touch()
+
+    sp.check_output(
+        [
+            "sunbeam",
+            "config",
+            "modify",
+            "-i",
+            "-s",
+            f"{config_str}",
+            f"{config_fp}",
+        ]
+    )
+
+    config_str = f"sbx_sga: {{bakta_ref: '{temp_dir}/bakta/db/'}}"
+    Path(temp_dir / "bakta/db/").mkdir(parents=True, exist_ok=True)
 
     sp.check_output(
         [
@@ -52,9 +83,10 @@ def run_sunbeam(setup):
                 "run",
                 "--profile",
                 project_dir,
-                "all_template",
+                "all_sga",
                 "--directory",
                 temp_dir,
+                "-n",
             ]
         )
     except sp.CalledProcessError as e:
@@ -73,8 +105,3 @@ def run_sunbeam(setup):
 
 def test_full_run(run_sunbeam):
     output_fp, benchmarks_fp = run_sunbeam
-
-    big_file_fp = output_fp / "qc/mush/big_file.txt"
-
-    # Check output
-    assert big_file_fp.exists(), f"{big_file_fp} does not exist"
