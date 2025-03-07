@@ -29,10 +29,10 @@ rule all_sga:
         # QC
         expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples),
         # Assembly QC
-        ISOLATE_FP / "checkm" / "quality_report.tsv",
+        expand(ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples),
         expand(ISOLATE_FP / "quast" / "{sample}" / "report.tsv", sample=Samples),
         # Typing
-        ISOLATE_FP / "mlst" / "mlst_report.tsv",
+        expand(ISOLATE_FP / "mlst" / "{sample}.mlst", sample=Samples),
         # Annotation
         expand(ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples),
         # AMR Profiling
@@ -59,7 +59,7 @@ rule sga_mash:
         zcat  {input.reads} > {output.agg}
         mash screen -w -p 8 {params.ref} {output.agg} > {output.win} 2> {log}
         sort -gr {output.win} > {output.sort} 2>> {log}
-        """
+	"""
 
 
 rule sga_shovill:
@@ -67,7 +67,7 @@ rule sga_shovill:
         rp1=QC_FP / "decontam" / "{sample}_1.fastq.gz",
         rp2=QC_FP / "decontam" / "{sample}_2.fastq.gz",
     output:
-        contigs=ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa",
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     log:
         LOG_FP / "sga_shovill_{sample}.log",
     benchmark:
@@ -76,31 +76,30 @@ rule sga_shovill:
         "envs/shovill.yml"
     shell:
         """
-        shovill --assembler skesa --outdir $(dirname {output.contigs}) --R1 {input.rp1}  --R2 {input.rp2} &> {log}
-        """
+        shovill --force --assembler skesa --outdir $(dirname {output.contigs}) --R1 {input.rp1}  --R2 {input.rp2} &> {log}
+        mv $(dirname {output.contigs})/contigs.fa {output.contigs}
+	"""
 
 
 ### Assembly QC
 rule sga_checkm:
     input:
-        contigs=expand(
-            ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa", sample=Samples
-        ),
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     output:
-        quality_report=ISOLATE_FP / "checkm" / "quality_report.tsv",
+        quality_report=ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv",
     params:
         ref=Cfg["sbx_sga"]["checkm_ref"],
     log:
-        LOG_FP / "sga_checkm.log",
+        LOG_FP / "sga_checkm_{sample}.log",
     benchmark:
-        BENCHMARK_FP / "sga_checkm.tsv"
+        BENCHMARK_FP / "sga_checkm_{sample}.tsv"
     conda:
-        "envs/checkm2.yml"
+        "envs/checkm2.yml",
     shell:
         """
         checkm2 predict \\
         -x fa \\
-        -i $(dirname {input.contigs[0]}) \\
+        -i {input.contigs} \\
         -o $(dirname {output.quality_report}) \\
         --database_path {params.ref} \\
         &> {log}
@@ -109,7 +108,7 @@ rule sga_checkm:
 
 rule sga_quast:
     input:
-        contigs=ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa",
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     output:
         quast_dir=ISOLATE_FP / "quast" / "{sample}" / "report.tsv",
     log:
@@ -130,27 +129,25 @@ rule sga_quast:
 ### Typing
 rule sga_mlst:
     input:
-        contigs=expand(
-            ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa", sample=Samples
-        ),
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     output:
-        mlst=ISOLATE_FP / "mlst" / "mlst_report.tsv",
+        mlst=ISOLATE_FP / "mlst" / "{sample}.mlst",
     log:
-        LOG_FP / "sga_mlst.log",
+        LOG_FP / "sga_mlst_{sample}.log",
     benchmark:
-        BENCHMARK_FP / "sga_mlst.tsv"
+        BENCHMARK_FP / "sga_mlst_{sample}.tsv"
     conda:
         "envs/mlst.yml"
     shell:
         """
-        mlst {input.contigs} > {output.mlst} 2> {log}
+        mlst --nopath {input.contigs} > {output.mlst} 2> {log}
         """
 
 
 ### Annotation
 rule sga_bakta:
     input:
-        contigs=ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa",
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     output:
         bakta=ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt",
     params:
@@ -174,7 +171,7 @@ rule sga_bakta:
 ### AMR Profiling
 rule sga_abritamr:
     input:
-        contigs=ISOLATE_FP / "shovill" / "{sample}" / "contigs.fa",
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
     output:
         abritamr=ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out",
     log:
@@ -187,6 +184,7 @@ rule sga_abritamr:
         """
         abritamr run \\
         --contigs {input.contigs} \\
-        --prefix {output.abritamr} \\
+        --prefix {wildcards.sample} \\
         &> {log}
-        """
+        mv {wildcards.sample} $(dirname $(dirname {output.abritamr}))
+	"""
