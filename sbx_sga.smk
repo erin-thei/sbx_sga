@@ -29,7 +29,9 @@ rule all_sga:
         # QC
         expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples),
         # Assembly QC
-        expand(ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples),
+        expand(
+            ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples
+        ),
         expand(ISOLATE_FP / "quast" / "{sample}" / "report.tsv", sample=Samples),
         # Typing
         expand(ISOLATE_FP / "mlst" / "{sample}.mlst", sample=Samples),
@@ -59,7 +61,7 @@ rule sga_mash:
         zcat  {input.reads} > {output.agg}
         mash screen -w -p 8 {params.ref} {output.agg} > {output.win} 2> {log}
         sort -gr {output.win} > {output.sort} 2>> {log}
-	"""
+    """
 
 
 rule sga_shovill:
@@ -78,7 +80,7 @@ rule sga_shovill:
         """
         shovill --force --assembler skesa --outdir $(dirname {output.contigs}) --R1 {input.rp1}  --R2 {input.rp2} &> {log}
         mv $(dirname {output.contigs})/contigs.fa {output.contigs}
-	"""
+    """
 
 
 ### Assembly QC
@@ -94,7 +96,7 @@ rule sga_checkm:
     benchmark:
         BENCHMARK_FP / "sga_checkm_{sample}.tsv"
     conda:
-        "envs/checkm2.yml",
+        "envs/checkm2.yml"
     shell:
         """
         checkm2 predict \\
@@ -187,4 +189,4 @@ rule sga_abritamr:
         --prefix {wildcards.sample} \\
         &> {log}
         mv {wildcards.sample} $(dirname $(dirname {output.abritamr}))
-	"""
+    """
