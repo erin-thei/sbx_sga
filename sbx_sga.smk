@@ -46,8 +46,9 @@ rule all_sga:
         # BAKTA SUMMARY
         str(ISOLATE_FP / "reports" / "bakta.report"),
         # SHOVILL SUMMARY
-        str(ISOLATE_FP / "reports" / "shovill.report")
-
+        str(ISOLATE_FP / "reports" / "shovill.report"),
+        # MASH SUMMARY 
+        str(ISOLATE_FP / "reports" / "mash.report")
 rule sga_mash:
     input:
         reads=expand(QC_FP / "decontam" / "{{sample}}_{rp}.fastq.gz", rp=Pairs),
@@ -243,3 +244,11 @@ rule shovill_summary:
        shovill_report=ISOLATE_FP / "reports" / "shovill.report",
    script:
        "scripts/summarize_shovill.py"  
+## Mash Report
+rule mash_summary:
+    input:
+        reports=expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples)
+    output:
+        mash_report=ISOLATE_FP / "reports" / "mash.report",
+    script:
+        "scripts/summarize_mash.py"
