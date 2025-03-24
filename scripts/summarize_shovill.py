@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3
-
 input_files = snakemake.input
 output_file = snakemake.output[0]
 output_obj = open(output_file, 'w')

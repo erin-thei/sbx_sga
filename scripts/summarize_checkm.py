@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3 # Do I need to change this?
-
 import sys 
 
 input_reports = snakemake.input 

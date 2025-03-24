@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3 
-
 import csv
 
 input_reports = snakemake.input
