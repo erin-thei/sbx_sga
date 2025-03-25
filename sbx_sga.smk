@@ -39,6 +39,12 @@ rule all_sga:
         expand(ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples),
         # AMR Profiling
         expand(ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out", sample=Samples),
+        f"{ISOLATE_FP}/reports/shovill.report",
+        f"{ISOLATE_FP}/reports/mlst.report",
+        f"{ISOLATE_FP}/reports/checkm.report",
+        f"{ISOLATE_FP}/reports/amr.report",
+        f"{ISOLATE_FP}/reports/bakta.report",
+        f"{ISOLATE_FP}/reports/mash.report",
 
 
 rule sga_mash:
@@ -190,3 +196,75 @@ rule sga_abritamr:
         &> {log}
         mv {wildcards.sample} $(dirname $(dirname {output.abritamr}))
     """
+
+
+### MLST Report
+rule mlst_summary:
+    input:
+        reports=expand(ISOLATE_FP / "mlst" / "{sample}.mlst", sample=Samples),
+    output:
+        mlst_report=ISOLATE_FP / "reports" / "mlst.report",
+    shell:
+        """
+        cat {input.reports} > {output.mlst_report}
+        """
+
+
+### CheckM Report
+rule checkm_summary:
+    input:
+        reports=expand(
+            ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples
+        ),
+    output:
+        checkm_report=ISOLATE_FP / "reports" / "checkm.report",
+    script:
+        "scripts/summarize_checkm.py"
+
+
+### AbritAMR Report:
+rule abritamr_summary:
+    input:
+        reports=expand(
+            ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out", sample=Samples
+        ),
+    output:
+        amr_report=ISOLATE_FP / "reports" / "amr.report",
+    script:
+        "scripts/summarize_amr_output.py"
+
+
+### Bakta Report
+rule bakta_summary:
+    input:
+        reports=expand(
+            ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples
+        ),
+    output:
+        bakta_report=ISOLATE_FP / "reports" / "bakta.report",
+    script:
+        "scripts/summarize_bakta.py"
+
+
+## Shovill Report
+rule shovill_summary:
+    input:
+        assemblies=expand(
+            ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa", sample=Samples
+        ),
+    output:
+        shovill_report=ISOLATE_FP / "reports" / "shovill.report",
+    script:
+        "scripts/summarize_shovill.py"
+
+
+## Mash Report
+rule mash_summary:
+    input:
+        reports=expand(
+            ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples
+        ),
+    output:
+        mash_report=ISOLATE_FP / "reports" / "mash.report",
+    script:
+        "scripts/summarize_mash.py"
