@@ -37,7 +37,7 @@ for file in reports:
         mash_annotation_dict[sample] = "Contaminated"
 
 with open(output, "w") as out:
-    out.write("Sample,Contamination\n")
+    out.write("Sample,Mash_Contamination\n")
     for sample, status in mash_annotation_dict.items():
         if not status == "Contaminated":
             out.write(f"{sample},None\n")
