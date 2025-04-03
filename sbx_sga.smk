@@ -9,6 +9,8 @@ def get_sga_path() -> Path:
 
 ISOLATE_FP = Cfg["all"]["output_fp"] / "isolate"
 SBX_SBA_VERSION = open(get_sga_path() / "VERSION").read().strip()
+TOOLS = ["shovill", "mlst", "checkm", "amr", "bakta", "mash"]
+
 
 try:
     BENCHMARK_FP
@@ -45,6 +47,7 @@ rule all_sga:
         f"{ISOLATE_FP}/reports/amr.report",
         f"{ISOLATE_FP}/reports/bakta.report",
         f"{ISOLATE_FP}/reports/mash.report",
+        f"{ISOLATE_FP}/final_summary.tsv",
 
 
 rule sga_mash:
@@ -268,3 +271,13 @@ rule mash_summary:
         mash_report=ISOLATE_FP / "reports" / "mash.report",
     script:
         "scripts/summarize_mash.py"
+
+
+## Summary Report
+rule all_summary:
+    input:
+        reports=expand(ISOLATE_FP / "reports" / "{tool}.report", tool=TOOLS),
+    output:
+        final_report=ISOLATE_FP / "final_summary.tsv",
+    script:
+        "scripts/summarize_all.py"
