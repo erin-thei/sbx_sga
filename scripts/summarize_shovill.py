@@ -1,4 +1,4 @@
-import os 
+import os
 
 input_files = snakemake.input
 output_file = snakemake.output[0]
@@ -9,7 +9,7 @@ output_obj.write(
 
 for file in input_files:
     sample = file.split("/")[-1].split(".fa")[0]
-    if os.path.getsize(file) > 0: 
+    if os.path.getsize(file) > 0:
         file_obj = open(file, "r")
         filelines = file_obj.readlines()
 

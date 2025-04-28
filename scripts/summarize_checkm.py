@@ -26,7 +26,5 @@ for file in input_reports:
         )
     else:
         sample = file.split("/")[-2]
-        output_report.write(
-            f"{sample},-,-,-,-,-,-\n"
-        )
+        output_report.write(f"{sample},-,-,-,-,-,-\n")
 output_report.close()

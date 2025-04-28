@@ -1,4 +1,4 @@
-import os 
+import os
 
 input_files = snakemake.input
 output_file = snakemake.output[0]
