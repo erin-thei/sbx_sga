@@ -1,5 +1,5 @@
 import csv
-
+import os 
 input_reports = snakemake.input
 output_report = snakemake.output[0]
 

@@ -87,9 +87,10 @@ rule sga_shovill:
         "envs/shovill.yml"
     shell:
         """
-        shovill --force --assembler skesa --outdir $(dirname {output.contigs}) --R1 {input.rp1}  --R2 {input.rp2} &> {log}
-        mv $(dirname {output.contigs})/contigs.fa {output.contigs}
-    """
+        (shovill --force --assembler skesa --outdir $(dirname {output.contigs}) --R1 {input.rp1}  --R2 {input.rp2} &> {log} &&
+        mv $(dirname {output.contigs})/contigs.fa {output.contigs}) ||
+        touch {output.contigs}
+        """
 
 
 ### Assembly QC
@@ -108,12 +109,17 @@ rule sga_checkm:
         "envs/checkm2.yml"
     shell:
         """
-        checkm2 predict \\
-        -x fa \\
-        -i {input.contigs} \\
-        -o $(dirname {output.quality_report}) \\
-        --database_path {params.ref} \\
-        &> {log}
+        if [ -s {input.contigs} ]; then
+            checkm2 predict \\
+            --force \\
+            -x fa \\
+            -i {input.contigs} \\
+            -o $(dirname {output.quality_report}) \\
+            --database_path {params.ref} \\
+            &> {log} || touch {output.quality_report}
+        else
+            touch {output.quality_report}
+        fi
         """
 
 
@@ -130,10 +136,14 @@ rule sga_quast:
         "envs/quast.yml"
     shell:
         """
-        quast.py \\
-        -o $(dirname {output.quast_dir}) \\
-        {input.contigs} \\
-        &> {log}
+        if [ -s {input.contigs} ]; then
+            quast.py \\
+                -o $(dirname {output.quast_dir}) \\
+                {input.contigs} \\
+                &> {log} || touch {output.quast_dir}
+        else
+            touch {output.quast_dir}
+        fi
         """
 
 
@@ -151,7 +161,11 @@ rule sga_mlst:
         "envs/mlst.yml"
     shell:
         """
-        mlst --nopath {input.contigs} > {output.mlst} 2> {log}
+        if [ -s {input.contigs} ]; then
+            mlst --nopath {input.contigs} > {output.mlst} 2> {log}
+        else
+            touch {output.mlst}
+        fi
         """
 
 
@@ -171,11 +185,15 @@ rule sga_bakta:
         "envs/bakta.yml"
     shell:
         """
-        bakta --db {params.ref} \\
-        --output $(dirname {output.bakta}) \\
-        --prefix {wildcards.sample} \\
-        --skip-plot {input.contigs} \\
-        &> {log}
+        if [ -s {input.contigs} ]; then
+            bakta --db {params.ref} \\
+            --output $(dirname {output.bakta}) \\
+            --prefix {wildcards.sample} \\
+            --skip-plot {input.contigs} \\
+            &> {log}
+        else
+            touch {output.bakta}
+        fi
         """
 
 
@@ -193,11 +211,16 @@ rule sga_abritamr:
         "envs/abritamr.yml"
     shell:
         """
-        abritamr run \\
-        --contigs {input.contigs} \\
-        --prefix {wildcards.sample} \\
-        &> {log}
-        mv {wildcards.sample} $(dirname $(dirname {output.abritamr}))
+        if [ -s {input.contigs} ]; then
+            abritamr run \\
+                --contigs {input.contigs} \\
+                --prefix {wildcards.sample} \\
+                &> {log}
+            mv {wildcards.sample} $(dirname $(dirname {output.abritamr}))
+        else
+            mkdir -p $(dirname {output.abritamr})
+            touch {output.abritamr}
+        fi 
     """
 
 
@@ -209,7 +232,14 @@ rule mlst_summary:
         mlst_report=ISOLATE_FP / "reports" / "mlst.report",
     shell:
         """
-        cat {input.reports} > {output.mlst_report}
+        for f in {input.reports}; do
+            if [ -s "$f" ]; then
+                cat "$f"
+            else
+                sample=$(basename "$f" .mlst)
+                echo -e "$sample\t\t\t\t\t\t\t\t\t"
+            fi
+        done > {output.mlst_report}
         """
 
 
