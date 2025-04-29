@@ -6,7 +6,7 @@ output = snakemake.output[0]
 mash_annotation_dict = {}
 
 for file in reports:
-    sample = file.split("/")[-1].split("_")[0]
+    sample = file.split("/")[-1].split("_sorted_winning.tab")[0]
     target_species = []
     with open(file, "r") as opened_report:
         mash_lines = opened_report.readlines()

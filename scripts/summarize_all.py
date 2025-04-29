@@ -8,8 +8,7 @@ output = snakemake.output[0]
 def process_filelines(file, tool, master_list):
 
     if tool == "mlst":
-        df = pd.read_csv(file, header=None, sep="\t")
-        df.columns = [
+        colnames = [
             "Sample",
             "Schema",
             "ST",
@@ -21,6 +20,9 @@ def process_filelines(file, tool, master_list):
             "Allele_6",
             "Allele_7",
         ]
+        df = pd.read_csv(
+            file, sep="\t", names=colnames, header=None, on_bad_lines="warn"
+        )
         df["Sample"] = df["Sample"].apply(lambda x: x.rstrip(".fa"))
         master_list.append(df)
 
