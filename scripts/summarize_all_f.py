@@ -26,6 +26,11 @@ def process_filelines(fp, tool, master_list):
 
 
 def summarize_all(input_files, output):
+    if not input_files:
+        # Handle empty input_files by writing an empty CSV with just the header
+        empty_df = pd.DataFrame(columns=["Sample"])
+        empty_df.to_csv(output, index=False)
+        return
     master_list = []
     for fp in input_files:
         tool = fp.split("/")[-1].split(".report")[0]
