@@ -71,24 +71,24 @@ def run_sunbeam(setup):
 
     # Run the test job
     try:
-        with open("test.log", "w") as f:
-            sp.check_output(
-                [
-                    "sunbeam",
-                    "run",
-                    "--profile",
-                    project_dir,
-                    "all_sga",
-                    "--directory",
-                    temp_dir,
-                    "-n",
-                ],
-                stdout=f,
-                stderr=f,
-            )
+        sbx_proc = sp.run(
+            [
+                "sunbeam",
+                "run",
+                "--profile",
+                project_dir,
+                "all_sga",
+                "--directory",
+                temp_dir,
+                "-n",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        print(sbx_proc.stdout)
+        print(sbx_proc.stderr)
     except sp.CalledProcessError as e:
-        with open("test.log") as f:
-            print(f.readlines())
         shutil.copytree(log_fp, "logs/")
         shutil.copytree(stats_fp, "stats/")
         sys.exit(e)
