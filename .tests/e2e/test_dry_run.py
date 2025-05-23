@@ -1,3 +1,4 @@
+import os
 import pytest
 import shutil
 import subprocess as sp
@@ -69,6 +70,8 @@ def run_sunbeam(setup):
     log_fp = output_fp / "logs"
     stats_fp = project_dir / "stats"
 
+    os.environ["SUNBEAM_EXTENSIONS"] = str(Path("extensions/").resolve())
+
     # DEBUG
     from sunbeam import EXTENSIONS_DIR
 
@@ -79,6 +82,7 @@ def run_sunbeam(setup):
             for file in ext.iterdir():
                 print("EXTENSIONS_DIR: ", file)
 
+    print(Path("extensions/").resolve())
     for ext in Path("extensions/").iterdir():
         print("WRONG: ", ext)
         if ext.is_dir():
