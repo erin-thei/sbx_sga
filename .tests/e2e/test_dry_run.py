@@ -69,6 +69,15 @@ def run_sunbeam(setup):
     log_fp = output_fp / "logs"
     stats_fp = project_dir / "stats"
 
+    # DEBUG
+    from sunbeam import EXTENSIONS_DIR
+    print("EXTENSIONS_DIR: ", EXTENSIONS_DIR())
+    for ext in EXTENSIONS_DIR().iterdir():
+        print("EXTENSIONS_DIR: ", ext)
+        if ext.is_dir():
+            for file in ext.iterdir():
+                print("EXTENSIONS_DIR: ", file)
+
     sbx_proc = sp.run(
         [
             "sunbeam",
@@ -90,7 +99,7 @@ def run_sunbeam(setup):
     try:
         shutil.copytree(log_fp, "logs/")
         shutil.copytree(stats_fp, "stats/")
-    except FileExistsError:
+    except FileNotFoundError:
         print("No logs or stats directory found.")
         Path("logs/").mkdir(parents=True, exist_ok=True)
         Path("stats/").mkdir(parents=True, exist_ok=True)
