@@ -110,8 +110,10 @@ def run_sunbeam(setup):
     output_fp = project_dir / "sunbeam_output"
     benchmarks_fp = project_dir / "stats/"
 
-    yield output_fp, benchmarks_fp
+    yield output_fp, benchmarks_fp, sbx_proc
 
 
 def test_dry_run(run_sunbeam):
-    output_fp, benchmarks_fp = run_sunbeam
+    output_fp, benchmarks_fp, proc = run_sunbeam
+
+    assert proc.returncode == 0, f"Sunbeam run failed with error: {proc.stderr}"
