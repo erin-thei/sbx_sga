@@ -1,15 +1,14 @@
-import os
 import pytest
 import shutil
 import subprocess as sp
-import sys
 import tempfile
 from pathlib import Path
 
 
 @pytest.fixture
-def setup():
+def setup(monkeypatch):
     temp_dir = Path(tempfile.mkdtemp())
+    monkeypatch.setenv("SUNBEAM_EXTENSIONS", str(Path("extensions/").resolve()))
 
     reads_fp = Path(".tests/data/reads/").resolve()
 
@@ -69,25 +68,6 @@ def run_sunbeam(setup):
     output_fp = project_dir / "sunbeam_output"
     log_fp = output_fp / "logs"
     stats_fp = project_dir / "stats"
-
-    os.environ["SUNBEAM_EXTENSIONS"] = str(Path("extensions/").resolve())
-
-    # DEBUG
-    from sunbeam import EXTENSIONS_DIR
-
-    print("EXTENSIONS_DIR: ", EXTENSIONS_DIR())
-    for ext in EXTENSIONS_DIR().iterdir():
-        print("EXTENSIONS_DIR: ", ext)
-        if ext.is_dir():
-            for file in ext.iterdir():
-                print("EXTENSIONS_DIR: ", file)
-
-    print(Path("extensions/").resolve())
-    for ext in Path("extensions/").iterdir():
-        print("WRONG: ", ext)
-        if ext.is_dir():
-            for file in ext.iterdir():
-                print("WRONG: ", file)
 
     sbx_proc = sp.run(
         [
