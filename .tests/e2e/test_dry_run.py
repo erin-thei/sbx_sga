@@ -25,9 +25,7 @@ def setup():
         [
             "sunbeam",
             "config",
-            "modify",
-            "-i",
-            "-s",
+            "--modify",
             f"{config_str}",
             f"{config_fp}",
         ]
@@ -40,9 +38,7 @@ def setup():
         [
             "sunbeam",
             "config",
-            "modify",
-            "-i",
-            "-s",
+            "--modify",
             f"{config_str}",
             f"{config_fp}",
         ]
@@ -55,9 +51,7 @@ def setup():
         [
             "sunbeam",
             "config",
-            "modify",
-            "-i",
-            "-s",
+            "--modify",
             f"{config_str}",
             f"{config_fp}",
         ]
