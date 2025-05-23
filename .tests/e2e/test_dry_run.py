@@ -69,36 +69,33 @@ def run_sunbeam(setup):
     log_fp = output_fp / "logs"
     stats_fp = project_dir / "stats"
 
-    # Run the test job
-    try:
-        sbx_proc = sp.run(
-            [
-                "sunbeam",
-                "run",
-                "--profile",
-                project_dir,
-                "all_sga",
-                "--directory",
-                temp_dir,
-                "-n",
-            ],
-            capture_output=True,
-            text=True,
-        )
+    sbx_proc = sp.run(
+        [
+            "sunbeam",
+            "run",
+            "--profile",
+            project_dir,
+            "all_sga",
+            "--directory",
+            temp_dir,
+            "-n",
+        ],
+        capture_output=True,
+        text=True,
+    )
 
-        print(sbx_proc.stdout)
-        print(sbx_proc.stderr)
-    except sp.CalledProcessError as e:
+    print("STDOUT: ", sbx_proc.stdout)
+    print("STDERR: ", sbx_proc.stderr)
+
+    try:
         shutil.copytree(log_fp, "logs/")
         shutil.copytree(stats_fp, "stats/")
-        sys.exit(e)
-
-    # shutil.copytree(log_fp, "logs/")
-    # shutil.copytree(stats_fp, "stats/")
-    Path("logs/").mkdir(parents=True, exist_ok=True)
-    Path("stats/").mkdir(parents=True, exist_ok=True)
-    Path("logs/file").touch()
-    Path("stats/file").touch()
+    except FileExistsError:
+        print("No logs or stats directory found.")
+        Path("logs/").mkdir(parents=True, exist_ok=True)
+        Path("stats/").mkdir(parents=True, exist_ok=True)
+        Path("logs/file").touch()
+        Path("stats/file").touch()
 
     output_fp = project_dir / "sunbeam_output"
     benchmarks_fp = project_dir / "stats/"
