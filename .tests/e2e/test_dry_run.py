@@ -79,6 +79,12 @@ def run_sunbeam(setup):
             for file in ext.iterdir():
                 print("EXTENSIONS_DIR: ", file)
 
+    for ext in Path("extensions/").iterdir():
+        print("WRONG: ", ext)
+        if ext.is_dir():
+            for file in ext.iterdir():
+                print("WRONG: ", file)
+
     sbx_proc = sp.run(
         [
             "sunbeam",
