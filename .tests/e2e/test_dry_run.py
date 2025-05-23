@@ -71,6 +71,7 @@ def run_sunbeam(setup):
 
     # DEBUG
     from sunbeam import EXTENSIONS_DIR
+
     print("EXTENSIONS_DIR: ", EXTENSIONS_DIR())
     for ext in EXTENSIONS_DIR().iterdir():
         print("EXTENSIONS_DIR: ", ext)
