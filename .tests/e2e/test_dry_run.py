@@ -8,7 +8,12 @@ from pathlib import Path
 @pytest.fixture
 def setup(monkeypatch):
     temp_dir = Path(tempfile.mkdtemp())
-    monkeypatch.setenv("SUNBEAM_EXTENSIONS", str(Path("extensions/").resolve()))
+    monkeypatch.setenv(
+        "SUNBEAM_EXTENSIONS", str(Path(__file__).parent.parent.parent.parent.resolve())
+    )
+    print(
+        "SUNBEAM_EXTENSIONS:", str(Path(__file__).parent.parent.parent.parent.resolve())
+    )
 
     reads_fp = Path(".tests/data/reads/").resolve()
 
@@ -17,6 +22,8 @@ def setup(monkeypatch):
     sp.check_output(["sunbeam", "init", "--data_fp", reads_fp, project_dir])
 
     config_fp = project_dir / "sunbeam_config.yml"
+    with open(config_fp, "r") as f:
+        print("Initial config file content:", f.read())
 
     config_str = f"sbx_sga: {{mash_ref: '{temp_dir}/dummy.msh'}}"
     Path(temp_dir / "dummy.msh").touch()
