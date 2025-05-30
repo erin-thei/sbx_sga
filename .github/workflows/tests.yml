@@ -2,10 +2,15 @@ name: Tests
 
 on:
   workflow_dispatch:
+    
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
 
 jobs:
   test:
-    name: Lint Code
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
