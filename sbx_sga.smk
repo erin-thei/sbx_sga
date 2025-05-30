@@ -1,25 +1,10 @@
-def get_sga_path() -> Path:
-    for fp in sys.path:
-        if fp.split("/")[-1] == "sbx_sga":
-            return Path(fp)
-    raise Error(
-        "Filepath for sbx_sga not found, are you sure it's installed under extensions/sbx_sga?"
-    )
-
-
 ISOLATE_FP = Cfg["all"]["output_fp"] / "isolate"
-SBX_SBA_VERSION = open(get_sga_path() / "VERSION").read().strip()
 TOOLS = ["shovill", "mlst", "checkm", "amr", "bakta", "mash"]
-
-
 try:
-    BENCHMARK_FP
+    SBX_SBA_VERSION = get_ext_version("sbx_sga")
 except NameError:
-    BENCHMARK_FP = output_subdir(Cfg, "benchmarks")
-try:
-    LOG_FP
-except NameError:
-    LOG_FP = output_subdir(Cfg, "logs")
+    # For backwards compatibility with older versions of Sunbeam
+    SBX_SBA_VERSION = "unknown"
 
 
 localrules:
@@ -70,7 +55,7 @@ rule sga_mash:
         zcat  {input.reads} > {output.agg}
         mash screen -w -p 8 {params.ref} {output.agg} > {output.win} 2> {log}
         sort -gr {output.win} > {output.sort} 2>> {log}
-    """
+        """
 
 
 rule sga_shovill:

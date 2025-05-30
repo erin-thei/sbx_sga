@@ -1,3 +1,4 @@
+import os
 import pytest
 import shutil
 import subprocess as sp
@@ -6,14 +7,8 @@ from pathlib import Path
 
 
 @pytest.fixture
-def setup(monkeypatch):
+def setup():
     temp_dir = Path(tempfile.mkdtemp())
-    monkeypatch.setenv(
-        "SUNBEAM_EXTENSIONS", str(Path(__file__).parent.parent.parent.parent.resolve())
-    )
-    print(
-        "SUNBEAM_EXTENSIONS:", str(Path(__file__).parent.parent.parent.parent.resolve())
-    )
 
     reads_fp = Path(".tests/data/reads/").resolve()
 
@@ -22,8 +17,6 @@ def setup(monkeypatch):
     sp.check_output(["sunbeam", "init", "--data_fp", reads_fp, project_dir])
 
     config_fp = project_dir / "sunbeam_config.yml"
-    with open(config_fp, "r") as f:
-        print("Initial config file content:", f.read())
 
     config_str = f"sbx_sga: {{mash_ref: '{temp_dir}/dummy.msh'}}"
     Path(temp_dir / "dummy.msh").touch()
@@ -94,15 +87,12 @@ def run_sunbeam(setup):
     print("STDOUT: ", sbx_proc.stdout)
     print("STDERR: ", sbx_proc.stderr)
 
-    try:
-        shutil.copytree(log_fp, "logs/")
-        shutil.copytree(stats_fp, "stats/")
-    except FileNotFoundError:
-        print("No logs or stats directory found.")
-        Path("logs/").mkdir(parents=True, exist_ok=True)
-        Path("stats/").mkdir(parents=True, exist_ok=True)
-        Path("logs/file").touch()
-        Path("stats/file").touch()
+    if os.getenv("GITHUB_ACTIONS") == "true":
+        try:
+            shutil.copytree(log_fp, "logs/")
+            shutil.copytree(stats_fp, "stats/")
+        except FileNotFoundError:
+            print("No logs or stats directory found.")
 
     output_fp = project_dir / "sunbeam_output"
     benchmarks_fp = project_dir / "stats/"
