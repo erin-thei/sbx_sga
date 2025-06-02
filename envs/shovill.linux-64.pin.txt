@@ -70,7 +70,7 @@ https://conda.anaconda.org/conda-forge/linux-64/libtiff-4.7.0-hf01ce69_5.conda#e
 https://conda.anaconda.org/conda-forge/linux-64/pcre2-10.45-hc749103_0.conda#b90bece58b4c2bf25969b70f3be42d25
 https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-7_hd590300_perl5.conda#f2cfec9406850991f4e3d960cc9e3321
 https://conda.anaconda.org/conda-forge/linux-64/python-3.13.3-hf636f53_101_cp313.conda#10622e12d649154af0bd76bcf33a7c5c
-https://conda.anaconda.org/bioconda/linux-64/seqtk-1.4-h577a1d6_3.tar.bz2#5f8fe04de44e811086feac9797f38e82
+https://conda.anaconda.org/bioconda/linux-64/seqtk-1.5-h577a1d6_0.tar.bz2#f3b935e48badeba0705976d4eb346c86
 https://conda.anaconda.org/bioconda/linux-64/skesa-2.5.1-h077b44d_2.tar.bz2#9307e766c5cec28ccfb374dc10e54978
 https://conda.anaconda.org/bioconda/linux-64/velvet-1.2.10-h577a1d6_8.tar.bz2#236f4ba52057b13d9da81116bba28f12
 https://conda.anaconda.org/conda-forge/linux-64/xorg-libsm-1.2.6-he73a12e_0.conda#1c74ff8c35dcadf952a16f752ca5aa49
