@@ -65,7 +65,7 @@ https://conda.anaconda.org/conda-forge/noarch/hyperframe-6.1.0-pyhd8ed1ab_0.cond
 https://conda.anaconda.org/conda-forge/noarch/idna-3.10-pyhd8ed1ab_1.conda#39a4f67be3286c86d696df570b1201b7
 https://conda.anaconda.org/conda-forge/linux-64/libblas-3.9.0-31_h59b9bed_openblas.conda#728dbebd0f7a20337218beacffd37916
 https://conda.anaconda.org/conda-forge/linux-64/libcurl-8.14.0-h332b0f4_0.conda#d1738cf06503218acee63669029fd8e8
-https://conda.anaconda.org/conda-forge/linux-64/liblightgbm-4.6.0-cuda_h1f3617d_1.conda#9f26921cff2736c0ebc5e2c183ef67f7
+https://conda.anaconda.org/conda-forge/linux-64/liblightgbm-4.6.0-cuda_h1f3617d_2.conda#0f42ccf597a09b561151d4b928456ead
 https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.2-py312h178313f_1.conda#eb227c3e0bf58f5bd69c0532b157975b
 https://conda.anaconda.org/conda-forge/noarch/mdurl-0.1.2-pyhd8ed1ab_1.conda#592132998493b3ff25fd7479396e8351
 https://conda.anaconda.org/conda-forge/noarch/namex-0.1.0-pyhd8ed1ab_0.conda#3eb854547a0183b994431957fa0e05d2
@@ -79,7 +79,7 @@ https://conda.anaconda.org/conda-forge/noarch/python-flatbuffers-25.2.10-pyhbc23
 https://conda.anaconda.org/conda-forge/noarch/python-tzdata-2025.2-pyhd8ed1ab_0.conda#88476ae6ebd24f39261e0854ac244f33
 https://conda.anaconda.org/conda-forge/noarch/pytz-2025.2-pyhd8ed1ab_0.conda#bc8e3267d44011051f2eb14d22fb0960
 https://conda.anaconda.org/conda-forge/linux-64/re2-2024.07.02-h9925aae_2.conda#e84ddf12bde691e8ec894b00ea829ddf
-https://conda.anaconda.org/conda-forge/noarch/setuptools-80.8.0-pyhff2d567_0.conda#ea075e94dc0106c7212128b6a25bbc4c
+https://conda.anaconda.org/conda-forge/noarch/setuptools-80.9.0-pyhff2d567_0.conda#4de79c071274a53dcaf2a8c749d1499e
 https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda#a451d576819089b0d672f18768be0f65
 https://conda.anaconda.org/conda-forge/linux-64/tensorboard-data-server-0.7.0-py312hda17c39_2.conda#8f4e72393be23b3eaa7bbc3cd4a71c40
 https://conda.anaconda.org/conda-forge/noarch/termcolor-3.1.0-pyhd8ed1ab_0.conda#951a99e94afe3d38bfdbd04902fe33b7
@@ -118,7 +118,7 @@ https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py312ha707e6e_0.con
 https://conda.anaconda.org/conda-forge/noarch/tensorboard-2.17.1-pyhd8ed1ab_0.conda#1a6c7a02498c952ba92e08b0abe0c48c
 https://conda.anaconda.org/conda-forge/noarch/urllib3-2.4.0-pyhd8ed1ab_0.conda#c1e349028e0052c4eea844e94f773065
 https://conda.anaconda.org/conda-forge/noarch/keras-3.10.0-pyh753f3f9_0.conda#9e1f77096da39525f54095edac3b2a48
-https://conda.anaconda.org/conda-forge/noarch/lightgbm-4.6.0-cuda_py_1.conda#e76fe8d084f981832f9220a057137994
+https://conda.anaconda.org/conda-forge/noarch/lightgbm-4.6.0-cuda_py_2.conda#580f1b7ee6c4c3ed28b400b2999156ad
 https://conda.anaconda.org/conda-forge/noarch/requests-2.32.3-pyhd8ed1ab_1.conda#a9b9368f3701a417eac9edbcae7cb737
 https://conda.anaconda.org/conda-forge/linux-64/scikit-learn-1.6.1-py312h7a48858_0.conda#102727f71df02a51e9e173f2e6f87d57
 https://conda.anaconda.org/conda-forge/linux-64/tensorflow-base-2.17.0-cpu_py312h4c54302_3.conda#86125a155194ea79fe3257b84f7f42d7
