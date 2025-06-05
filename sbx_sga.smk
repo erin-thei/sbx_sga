@@ -171,7 +171,7 @@ rule sga_bakta:
     shell:
         """
         if [ -s {input.contigs} ]; then
-            bakta --db {params.ref} \\
+            bakta --force --db {params.ref} \\
             --output $(dirname {output.bakta}) \\
             --prefix {wildcards.sample} \\
             --skip-plot {input.contigs} \\
@@ -205,7 +205,7 @@ rule sga_abritamr:
         else
             mkdir -p $(dirname {output.abritamr})
             touch {output.abritamr}
-        fi 
+        fi     
     """
 
 
@@ -228,16 +228,29 @@ rule mlst_summary:
         """
 
 
-### CheckM Report
-rule checkm_summary:
+### Parse checkm outputs
+rule parse_checkm_report:
     input:
-        reports=expand(
-            ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples
+        report=ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv",
+    output:
+        parsed_report=ISOLATE_FP / "checkm" / "{sample}" / "parsed_summary.tsv",
+    script:
+        "scripts/checkm.py"
+
+
+### Combine parsed checkm output reports
+rule combine_checkm_summary:
+    input:
+        summaries=expand(
+            ISOLATE_FP / "checkm" / "{sample}" / "parsed_summary.tsv", sample=Samples
         ),
     output:
-        checkm_report=ISOLATE_FP / "reports" / "checkm.report",
-    script:
-        "scripts/summarize_checkm.py"
+        all_summary=ISOLATE_FP / "reports" / "checkm.report",
+    shell:
+        """
+        echo -e "Sample\\tCheckM_Completeness\\tCheckM_Contamination" > {output.all_summary}
+        cat {input.summaries} >> {output.all_summary}
+        """
 
 
 ### AbritAMR Report:
@@ -249,43 +262,82 @@ rule abritamr_summary:
     output:
         amr_report=ISOLATE_FP / "reports" / "amr.report",
     script:
-        "scripts/summarize_amr_output.py"
+        "scripts/amr.py"
 
 
-### Bakta Report
-rule bakta_summary:
+### Parse bakta output
+rule parse_bakta_report:
+    input:
+        bakta=ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt",
+    output:
+        parsed_report=ISOLATE_FP / "bakta" / "{sample}" / "parsed_summary.tsv",
+    script:
+        "scripts/bakta.py"
+
+
+### Combine parsed bakta outputs
+rule combine_bakta_summary:
     input:
         reports=expand(
-            ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples
+            ISOLATE_FP / "bakta" / "{sample}" / "parsed_summary.tsv", sample=Samples
         ),
     output:
         bakta_report=ISOLATE_FP / "reports" / "bakta.report",
-    script:
-        "scripts/summarize_bakta.py"
+    shell:
+        """
+        echo -e "Sample\\tGenome Size\\tCDS\\tN50\\trrna\\ttrna\\ttmrna\\tcrisper\\thypothetical" > {output.bakta_report}
+        cat {input.reports} >> {output.bakta_report}
+        """
 
 
-## Shovill Report
+## Parse shovill output
 rule shovill_summary:
     input:
-        assemblies=expand(
-            ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa", sample=Samples
+        contigs=ISOLATE_FP / "shovill" / "{sample}" / "{sample}.fa",
+    output:
+        statistics=ISOLATE_FP / "shovill" / "{sample}" / "parsed_summary.tsv",
+    script:
+        "scripts/shovill.py"
+
+
+# Combine shovill outputs
+rule combine_shovill_summary:
+    input:
+        reports=expand(
+            ISOLATE_FP / "shovill" / "{sample}" / "parsed_summary.tsv", sample=Samples
         ),
     output:
         shovill_report=ISOLATE_FP / "reports" / "shovill.report",
-    script:
-        "scripts/summarize_shovill.py"
+    shell:
+        """
+        echo -e "Sample\\tCoverage\\tNumber of Contigs" > {output.shovill_report}
+        cat {input.reports} >> {output.shovill_report}
+        """
 
 
 ## Mash Report
 rule mash_summary:
     input:
-        reports=expand(
-            ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples
+        sorted_reports=ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab",
+    output:
+        summary=ISOLATE_FP / "mash" / "{sample}_summary.tsv",
+    script:
+        "scripts/mash.py"
+
+
+# Combine shovill outputs
+rule combine_mash_summary:
+    input:
+        summary_reports=expand(
+            ISOLATE_FP / "mash" / "{sample}_summary.tsv", sample=Samples
         ),
     output:
         mash_report=ISOLATE_FP / "reports" / "mash.report",
-    script:
-        "scripts/summarize_mash.py"
+    shell:
+        """
+        echo -e "Sample\\tMash_Contamination\\tContaminated_Spp" > {output.mash_report}
+        cat {input.summary_reports} >> {output.mash_report}
+        """
 
 
 ## Summary Report
