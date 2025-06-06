@@ -26,7 +26,7 @@ rule sga_install_virsorter:
     log:
         LOG_FP / "install_virsorter.log",
     params:
-        db_fp=Cfg["sbx_sga"]["virsorter_db_fp"],
+        db_fp=Cfg["sbx_sga"]["virsorter_ref"],
     resources:
         runtime=2400,
     threads: 4
@@ -61,7 +61,7 @@ rule sga_virsorter:
         LOG_FP / "virsorter_{sample}.log",
     params:
         out_dir=str(VIRUS_FP / "virsorter" / "{sample}"),
-        db_fp=Cfg["sbx_sga"]["virsorter_db_fp"],
+        db_fp=Cfg["sbx_sga"]["virsorter_ref"],
     resources:
         mem_mb=24000,
         runtime=720,
