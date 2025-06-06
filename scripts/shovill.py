@@ -9,9 +9,9 @@ filelines = file_obj.readlines()
 
 if len(filelines) == 0:
     genome_cov = "NA"
-    num_contigs = "NA"
-    write_to_report(output, genome, genome_cov, num_contigs)
+    num_ctgs = "NA"
+    write_to_report(output, genome, genome_cov, num_ctgs)
 else:
     ctg_stats = get_individual_cov(filelines)
-    genome_cov, num_contgs = calc_cov_stats(ctg_stats)
-    write_to_report(output, genome, genome_cov, num_contgs)
+    genome_cov, num_ctgs = calc_cov_stats(ctg_stats)
+    write_to_report(output, genome, genome_cov, num_ctgs)

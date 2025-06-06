@@ -13,7 +13,10 @@ def open_report(report):
 def process_mash_line(line):
     line_list = line.rstrip().split("\t")
     species_line = line_list[-1]
-    split_char = re.findall("N[A-Z]_[0-9A-Z]+\.[0-9]", species_line)[0]
+    matches = re.findall("N[A-Z]_[0-9A-Z]+\.[0-9]", species_line)
+    if not matches:
+        raise ValueError(f"No match found in species_line: {species_line}")
+    split_char = matches[0]
     species_split = line.split(split_char)[1].lstrip()
     species = " ".join(species_split.split()[:2])
     median_multiplicity = float(line_list[2])
@@ -71,7 +74,7 @@ def write_report(output, sample_name, mash_dict):
         status = list(mash_dict.keys())[0]
     else:
         # Raise error if dictionary is not proper length
-        pass
+        raise ValueError(f"Expected mash_dict to have exactly one key-value pair, but got {len(mash_dict)}.")
     with open(output, "w") as out:
         if status == "Contaminated":
             contaminated_spp = mash_dict[status]
