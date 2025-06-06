@@ -60,7 +60,7 @@ def contamination_call(target_set):
     if len(target_set) <= 1:
         mash_dict["NA"] = ""
     else:
-        species = " ".join(target_set)
+        species = " ".join(sorted(target_set))
         mash_dict["Contaminated"] = species
     return mash_dict
 
