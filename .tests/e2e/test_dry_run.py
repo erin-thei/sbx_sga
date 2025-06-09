@@ -2,24 +2,21 @@ import os
 import pytest
 import shutil
 import subprocess as sp
-import tempfile
 from pathlib import Path
 
 
 @pytest.fixture
-def setup():
-    temp_dir = Path(tempfile.mkdtemp())
-
+def setup(tmp_path):
     reads_fp = Path(".tests/data/reads/").resolve()
 
-    project_dir = temp_dir / "project/"
+    project_dir = tmp_path / "project/"
 
     sp.check_output(["sunbeam", "init", "--data_fp", reads_fp, project_dir])
 
     config_fp = project_dir / "sunbeam_config.yml"
 
-    config_str = f"sbx_sga: {{mash_ref: '{temp_dir}/dummy.msh'}}"
-    Path(temp_dir / "dummy.msh").touch()
+    config_str = f"sbx_sga: {{mash_ref: '{tmp_path}/dummy.msh'}}"
+    Path(tmp_path / "dummy.msh").touch()
 
     sp.check_output(
         [
@@ -31,8 +28,8 @@ def setup():
         ]
     )
 
-    config_str = f"sbx_sga: {{checkm_ref: '{temp_dir}/dummy.1.dmnd'}}"
-    Path(temp_dir / "dummy.1.dmnd").touch()
+    config_str = f"sbx_sga: {{checkm_ref: '{tmp_path}/dummy.1.dmnd'}}"
+    Path(tmp_path / "dummy.1.dmnd").touch()
 
     sp.check_output(
         [
@@ -44,8 +41,8 @@ def setup():
         ]
     )
 
-    config_str = f"sbx_sga: {{bakta_ref: '{temp_dir}/bakta/db/'}}"
-    Path(temp_dir / "bakta/db/").mkdir(parents=True, exist_ok=True)
+    config_str = f"sbx_sga: {{bakta_ref: '{tmp_path}/bakta/db/'}}"
+    Path(tmp_path / "bakta/db/").mkdir(parents=True, exist_ok=True)
 
     sp.check_output(
         [
@@ -57,14 +54,27 @@ def setup():
         ]
     )
 
-    yield temp_dir, project_dir
+    genomad_fp = tmp_path / "genomad_db"
+    config_str = f"sbx_sga: {{genomad_ref: '{genomad_fp.parent}'}}"
+    genomad_fp.mkdir(parents=True, exist_ok=True)
+    (genomad_fp / "version.txt").touch()
 
-    shutil.rmtree(temp_dir)
+    sp.check_output(
+        [
+            "sunbeam",
+            "config",
+            "--modify",
+            f"{config_str}",
+            f"{config_fp}",
+        ]
+    )
+
+    yield tmp_path, project_dir
 
 
 @pytest.fixture
 def run_sunbeam(setup):
-    temp_dir, project_dir = setup
+    tmp_path, project_dir = setup
     output_fp = project_dir / "sunbeam_output"
     log_fp = output_fp / "logs"
     stats_fp = project_dir / "stats"
@@ -76,9 +86,13 @@ def run_sunbeam(setup):
             "--profile",
             project_dir,
             "all_sga",
+            "all_sga_virus",
             "--directory",
-            temp_dir,
+            tmp_path,
             "-n",
+            "--include",
+            "sbx_sga",
+            "--show-failed-logs",
         ],
         capture_output=True,
         text=True,

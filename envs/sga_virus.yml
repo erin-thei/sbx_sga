@@ -1,0 +1,6 @@
+name: sga_virus
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - genomad

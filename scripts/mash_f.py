@@ -74,7 +74,9 @@ def write_report(output, sample_name, mash_dict):
         status = list(mash_dict.keys())[0]
     else:
         # Raise error if dictionary is not proper length
-        raise ValueError(f"Expected mash_dict to have exactly one key-value pair, but got {len(mash_dict)}.")
+        raise ValueError(
+            f"Expected mash_dict to have exactly one key-value pair, but got {len(mash_dict)}."
+        )
     with open(output, "w") as out:
         if status == "Contaminated":
             contaminated_spp = mash_dict[status]
