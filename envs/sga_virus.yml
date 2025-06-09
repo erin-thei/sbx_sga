@@ -1,4 +1,4 @@
-name: sga_virsorter
+name: sga_virus
 channels:
   - conda-forge
   - bioconda

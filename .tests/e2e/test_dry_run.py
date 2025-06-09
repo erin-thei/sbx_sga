@@ -2,7 +2,6 @@ import os
 import pytest
 import shutil
 import subprocess as sp
-import tempfile
 from pathlib import Path
 
 
@@ -71,8 +70,6 @@ def setup(tmp_path):
     )
 
     yield tmp_path, project_dir
-
-    shutil.rmtree(tmp_path)
 
 
 @pytest.fixture
