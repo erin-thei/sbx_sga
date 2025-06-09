@@ -3,6 +3,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - virsorter2
-  - checkv
-  - pharokka
+  - genomad

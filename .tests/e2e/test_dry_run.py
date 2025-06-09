@@ -55,6 +55,21 @@ def setup(tmp_path):
         ]
     )
 
+    genomad_fp = tmp_path / "genomad_db"
+    config_str = f"sbx_sga: {{genomad_ref: '{genomad_fp.parent}'}}"
+    genomad_fp.mkdir(parents=True, exist_ok=True)
+    (genomad_fp / "version.txt").touch()
+
+    sp.check_output(
+        [
+            "sunbeam",
+            "config",
+            "--modify",
+            f"{config_str}",
+            f"{config_fp}",
+        ]
+    )
+
     yield tmp_path, project_dir
 
     shutil.rmtree(tmp_path)
@@ -78,6 +93,9 @@ def run_sunbeam(setup):
             "--directory",
             tmp_path,
             "-n",
+            "--include",
+            "sbx_sga",
+            "--show-failed-logs",
         ],
         capture_output=True,
         text=True,
