@@ -10,6 +10,23 @@ except NameError:
 localrules:
     all_sga,
 
+rule sga_sylph:
+    input:
+        rp1=QC_FP / "decontam" / "{sample}_1.fastq.gz",
+        rp2=QC_FP / "decontam" / "{sample}_2.fastq.gz",
+    # pretend database exists
+    output:
+        ISOLATE_FP / "sylph" / "{sample}.tsv"
+    # ignore params, log, benchmark, conda env for now
+    threads: 8
+    params:
+        ref=Cfg["sbx_sga"]["sylph_ref"],
+    shell:
+        """
+        sylph profile {params.ref} -1 {input.rp1} -2 {input.rp2} -t {threads} > {output} 
+        
+        """
+    
 
 rule all_sga:
     input:
