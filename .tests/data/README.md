@@ -10,6 +10,17 @@ The `reads/` subdirectory holds paired-end FASTQ files generated from two bacter
 
 The end-to-end tests can be run with very small versions of the databases required by the pipeline. Each database should be compact so that it can be stored under version control and executed on GitHub Actions.
 
+## Setup
+
+Create a small conda environment containing the tools needed to build the test
+databases:
+
+```bash
+conda create -n sga_testdbs -c conda-forge -c bioconda \
+    mash bakta checkm2 genomad diamond prodigal
+conda activate sga_testdbs
+```
+
 ### Mash
 1. Download the two bacterial genomes used to create the reads.
 2. Build a small sketch:
