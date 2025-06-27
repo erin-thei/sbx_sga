@@ -25,17 +25,20 @@ The end-to-end tests can be run with very small versions of the databases requir
    ```
 
 ### Bakta
-1. Download the Bakta database into a new directory:
+1. Create a new Bakta database populated only with the proteins from the test genomes. This keeps the data set tiny:
    ```bash
-   bakta database --download bakta_db/
+   mkdir bakta_db
+   bakta database init bakta_db
+   bakta database add-genomes genome1.fna genome2.fna --output bakta_db
    ```
-2. Remove large optional files to keep the directory small (taxdump archives, large FASTA files, etc.).
+2. Only the core taxonomy files and the two genomes are included so the directory remains under a few megabytes.
 
 ### Genomad
-1. Obtain the Genomad database:
+1. Build a miniature Genomad database using the same bacterial references:
    ```bash
-   genomad download-database genomad_db/
+   mkdir genomad_db
+   genomad build-database genome1.fna genome2.fna genomad_db/
    ```
-2. Delete nonessential files to reduce its size, leaving `version.txt` and the necessary indices.
+2. The command generates only the indices required for `genomad end-to-end`, producing a very small database directory.
 
 Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, and `genomad_ref` to these paths.
