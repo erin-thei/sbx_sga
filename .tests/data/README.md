@@ -4,7 +4,7 @@ This directory contains read files and miniature reference databases used for te
 
 ## Sample reads
 
-The `reads/` subdirectory holds paired-end FASTQ files generated from two bacterial genomes with a handful of host reads. The genomes are available from the [Sunbeam test data repository](https://github.com/sunbeam-labs/sunbeam/tree/main/tests/data/raw). The reads were produced using `art_illumina` with 150&nbsp;bp read length.
+The `reads/` subdirectory holds paired-end FASTQ files generated from two bacterial genomes with a handful of host reads. The genomes are available from the [Sunbeam test data repository](https://github.com/sunbeam-labs/sunbeam/tree/main/tests/data/raw). The reads were produced using `art_illumina` with 150 bp read length.
 
 ## Miniature databases
 
