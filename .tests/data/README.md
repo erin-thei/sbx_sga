@@ -17,7 +17,7 @@ databases:
 
 ```bash
 conda create -n sga_testdbs -c conda-forge -c bioconda \
-    mash bakta checkm2 genomad diamond prodigal
+    mash bakta checkm2 genomad sylph diamond prodigal
 conda activate sga_testdbs
 ```
 
@@ -52,4 +52,12 @@ conda activate sga_testdbs
    ```
 2. The command generates only the indices required for `genomad end-to-end`, producing a very small database directory.
 
-Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, and `genomad_ref` to these paths.
+### Sylph
+1. Construct a minimal Sylph database from the two genomes:
+   ```bash
+   mkdir sylph_db
+   sylph build genome1.fna genome2.fna --output sylph_db
+   ```
+2. This produces a lightweight index suitable for `sylph classify`, keeping the directory under a few megabytes.
+
+Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, `genomad_ref`, and `sylph_ref` to these paths.
