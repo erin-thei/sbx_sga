@@ -30,9 +30,14 @@ conda activate sga_testdbs
 
 ### CheckM2
 1. Extract protein sequences from the genomes (e.g. with `prodigal`).
+   ```bash
+   prodigal -i genome1.fna -a genome1.faa
+   prodigal -i genome2.fna -a genome2.faa
+   cat genome1.faa genome2.faa > species.faa
+   ```
 2. Create a DIAMOND database:
    ```bash
-   diamond makedb --in proteins.faa -d checkm_test.dmnd
+   diamond makedb --in species.faa -d checkm_test.dmnd
    ```
 
 ### Bakta
