@@ -25,6 +25,7 @@ rule sga_snippy:
         LOG_FP / "sga_snippy_{sample}.log",
     benchmark:
         BENCHMARK_FP / "sga_snippy_{sample}.tsv",
+    threads: 8
     conda:
         "envs/snippy.yml",
     shell:
