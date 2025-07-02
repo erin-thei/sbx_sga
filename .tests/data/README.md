@@ -41,21 +41,10 @@ conda activate sga_testdbs
    ```
 
 ### Bakta
-1. Create a new Bakta database populated only with the proteins from the test genomes. This keeps the data set tiny:
-   ```bash
-   mkdir bakta_db
-   bakta database init bakta_db
-   bakta database add-genomes genome1.fna genome2.fna --output bakta_db
-   ```
-2. Only the core taxonomy files and the two genomes are included so the directory remains under a few megabytes.
+Bakta has a number of different database components that each present their own challenges for miniaturization.
 
 ### Genomad
-1. Build a miniature Genomad database using the same bacterial references:
-   ```bash
-   mkdir genomad_db
-   genomad build-database genome1.fna genome2.fna genomad_db/
-   ```
-2. The command generates only the indices required for `genomad end-to-end`, producing a very small database directory.
+Genomad is another tricky one. Haven't found a way yet to create minimal versions of all the required components.
 
 ### Sylph
 1. Construct a minimal Sylph database from the two genomes:
@@ -64,4 +53,4 @@ conda activate sga_testdbs
    ```
 2. This produces a lightweight index suitable for `sylph classify`, keeping the directory under a few megabytes.
 
-Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, `genomad_ref`, and `sylph_ref` to these paths.
+Place the resulting files in `.tests/data/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, `genomad_ref`, and `sylph_ref` to these paths.
