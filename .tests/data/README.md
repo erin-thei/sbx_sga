@@ -60,8 +60,7 @@ conda activate sga_testdbs
 ### Sylph
 1. Construct a minimal Sylph database from the two genomes:
    ```bash
-   mkdir sylph_db
-   sylph build genome1.fna genome2.fna --output sylph_db
+   sylph sketch genome1.fna genome2.fna
    ```
 2. This produces a lightweight index suitable for `sylph classify`, keeping the directory under a few megabytes.
 
