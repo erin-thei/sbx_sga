@@ -54,3 +54,8 @@ Genomad is another tricky one. Haven't found a way yet to create minimal version
 2. This produces a lightweight index suitable for `sylph classify`, keeping the directory under a few megabytes.
 
 Place the resulting files in `.tests/data/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, `genomad_ref`, and `sylph_ref` to these paths.
+
+### Snippy
+For the Snippy workflow, a small reference genome is required. You can reuse one of the genomes downloaded for the
+sample reads above. Copy the FASTA file into `.tests/data/` and name it `snippy_ref.fa`. Point the `snippy_ref`
+configuration option at this file when running the tests.
