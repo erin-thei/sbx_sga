@@ -32,7 +32,7 @@ rule sga_snippy:
         "envs/snippy.yml"
     shell:
         """
-        snippy --cpus {threads} --outdir {output.vcf.parent} \
+        snippy --cpus {threads} --outdir $(dirname {output.vcf}) \
             --ref {params.ref} --R1 {input.rp1} --R2 {input.rp2} > {log} 2>&1
         """
 
