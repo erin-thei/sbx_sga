@@ -1,0 +1,6 @@
+name: sga_snippy
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - snippy

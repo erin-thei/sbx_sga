@@ -4,3 +4,4 @@ sbx_sga:
   bakta_ref: /mnt/isilon/marc_genomics/shared_data/bakta_db_5/db/
   genomad_ref: /mnt/isilon/marc_genomics/shared_data/genomad_db/
   sylph_ref: /mnt/isilon/marc_genomics/shared_data/sylph_db/gtdb-r220-c200-dbv1.syldb #default database
+  snippy_ref: /mnt/isilon/marc_genomics/shared_data/snippy.fa
