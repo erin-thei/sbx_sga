@@ -51,7 +51,9 @@ rule sylph_report:
 
 rule combine_sylph_summary:
     input:
-        summaries=expand(ISOLATE_FP / "sylph" / "reports" / "{sample}_report.tsv", sample=Samples),
+        summaries=expand(
+            ISOLATE_FP / "sylph" / "reports" / "{sample}_report.tsv", sample=Samples
+        ),
     output:
         all_summary=ISOLATE_FP / "reports" / "sylph.report",
     shell:

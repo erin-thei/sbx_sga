@@ -1,4 +1,5 @@
 import sys
+
 sys.stderr.write("Starting Sylph processing...\n")
 from scripts.sylph_f import parse_file, get_stats, write_report
 
