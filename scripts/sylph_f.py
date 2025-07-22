@@ -1,24 +1,31 @@
-import sys 
+import sys
 import os
 from pathlib import Path
 
-# Find sylph output .tsv file
-def find_file(filename, search_path="."):
-    for root, dirs, files in os.walk(search_path):
-        if filename in files:
-            return os.path.join(root, filename)
 
-# Parsing the tsv file 
+# # Find sylph output .tsv file
+# def find_file(filename, search_path="."):
+#     for root, dirs, files in os.walk(search_path):
+#         if filename in files:
+#             return os.path.join(root, filename)
+
+
+# Parsing the tsv file
 def parse_file(filepath):
     with open(filepath, "r") as file_obj:
         filelines = file_obj.readlines()
-        if len(filelines) > 0:
+        if len(filelines) > 1:
             keys = filelines[0].strip().split("\t")
-            values= filelines[1].strip().split("\t")
+            values = filelines[1].strip().split("\t")
             data_dict = dict(zip(keys, values))
             return data_dict
         else:
-            return {"Sample_file": filepath, "Taxonomic_abundance": "NA", "Contig_name": "NA"}
+            return {
+                "Sample_file": "NA",
+                "Taxonomic_abundance": "NA",
+                "Contig_name": "NA",
+            }
+
 
 # Fetching Sample name, taxonomic abundance, and contig name from parsed data
 def get_stats(data_dict):
@@ -27,10 +34,9 @@ def get_stats(data_dict):
     contig = data_dict.get("Contig_name", "NA")
     return sample_name, taxo_abundance, contig
 
+
 # Writing it to the snakemake output
 def write_report(output, sample_name, taxo_abundance, contig):
     with open(output, "w") as op:
         op.write(f"{sample_name}\t{taxo_abundance}\t{contig}\n")
     return output
-
-
