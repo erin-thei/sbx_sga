@@ -10,6 +10,9 @@ except NameError:
 localrules:
     all_sga,
 
+rule sylph_temp:
+    input:
+        expand(ISOLATE_FP / "sylph" / "{sample}.tsv", sample=Samples),
 
 rule sga_sylph:
     input:
@@ -34,15 +37,34 @@ rule sga_sylph:
         
         """
 
+rule sylph_report:
+    input:
+        report=ISOLATE_FP / "sylph" / "{sample}.tsv",
+    output:
+        parsed_report=ISOLATE_FP / "sylph" / "{sample}_report.tsv",
+    script:
+        "scripts/sylph.py"
+
+rule combine_sylph_summary:
+    input:
+        summaries=expand(
+            ISOLATE_FP / "sylph" / "{sample}_report.tsv", sample=Samples
+        ),
+    output:
+        all_summary=ISOLATE_FP / "reports" / "sylph.report",
+    shell:
+        """
+        echo -e "Sample\\tTaxonomic_Abundance\\tContig_Name" > {output.all_summary}
+        cat {input.summaries} >> {output.all_summary}
+        """
 
 rule all_sga:
     input:
         # QC
         expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples),
         # Assembly QC
-        expand(
-            ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples
-        ),
+        expand(ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples),
+        
         expand(ISOLATE_FP / "quast" / "{sample}" / "report.tsv", sample=Samples),
         # Typing
         expand(ISOLATE_FP / "mlst" / "{sample}.mlst", sample=Samples),
