@@ -289,7 +289,7 @@ rule combine_bakta_summary:
         bakta_report=ISOLATE_FP / "reports" / "bakta.report",
     shell:
         """
-        echo -e "Sample\\tGenome Size\\tCDS\\tN50\\trrna\\ttrna\\ttmrna\\tcrispr\\thypothetical" > {output.bakta_report}
+        echo -e "Sample\\tGenome Size\\tCDS\\tN50\\trrna\\ttrna\\ttmrna\\tcrispr\\thypothetical\\tGC Content" > {output.bakta_report}
         cat {input.reports} >> {output.bakta_report}
         """
 

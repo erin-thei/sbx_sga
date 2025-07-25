@@ -31,14 +31,19 @@ def get_first_non_phage_hit(lines):
     for idx, line in enumerate(lines):
         if "phage" not in line.lower():
             return process_mash_line(line), idx
-    raise ValueError("All top hits contain 'phage' — no valid non-phage hit found.")
+    return None, None
 
 def parse_report(top_lines):
     target_species = []
 
-    # Get top non-phage hit and its index
-    (top_species, top_median_multiplicity, top_identity, top_hits), top_index = get_first_non_phage_hit(top_lines)   
+    result = get_first_non_phage_hit(top_lines)
     
+    if result == (None, None):
+        return set()
+
+    # Get top non-phage hit and its index
+    (top_species, top_median_multiplicity, top_identity, top_hits), top_index = result
+
     if (top_identity >= 0.85) and (top_hits >= 100):
         target_species.append(top_species)
 
