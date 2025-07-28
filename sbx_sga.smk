@@ -11,6 +11,58 @@ localrules:
     all_sga,
 
 
+rule sylph_temp:
+    input:
+        ISOLATE_FP / "reports" / "sylph.report",
+
+
+rule sga_sylph:
+    input:
+        rp1=QC_FP / "decontam" / "{sample}_1.fastq.gz",
+        rp2=QC_FP / "decontam" / "{sample}_2.fastq.gz",
+    # pretend database exists
+    output:
+        report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv",
+    # ignore params, log, benchmark, conda env for now
+    threads: 8
+    params:
+        ref=Cfg["sbx_sga"]["sylph_ref"],
+    log:
+        LOG_FP / "sga_sylph_{sample}.log",
+    benchmark:
+        BENCHMARK_FP / "sga_sylph_{sample}.tsv"
+    conda:
+        "envs/sylph.yml"
+    shell:
+        """
+        sylph sketch -1 {input.rp1} -2 {input.rp2} -t 1 -d $(dirname {output.report})
+        sylph profile {params.ref} $(dirname {output.report})/*.sylsp -t {threads} -o {output.report} 2> {log}
+        """
+
+
+rule sylph_report:
+    input:
+        report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv",
+    output:
+        parsed_report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.sylph",
+    script:
+        "scripts/sylph.py"
+
+
+rule combine_sylph_summary:
+    input:
+        summaries=expand(
+            ISOLATE_FP / "sylph" / "{sample}" / "{sample}.sylph", sample=Samples
+        )
+    output:
+        all_summary=ISOLATE_FP / "reports" / "sylph.report",
+    shell:
+        """
+        echo -e "Sample\\tTaxonomic_Abundance\\tContig_Name" > {output.all_summary}
+        cat {input.summaries} >> {output.all_summary}
+        """
+
+
 rule all_sga:
     input:
         # QC
@@ -26,6 +78,9 @@ rule all_sga:
         expand(ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples),
         # AMR Profiling
         expand(ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out", sample=Samples),
+        # Sylph
+        #expand(ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv", sample=Samples),
+        f"{ISOLATE_FP}/reports/sylph.report",
         f"{ISOLATE_FP}/reports/shovill.report",
         f"{ISOLATE_FP}/reports/mlst.report",
         f"{ISOLATE_FP}/reports/checkm.report",
@@ -352,3 +407,22 @@ rule all_summary:
         final_report=ISOLATE_FP / "final_summary.tsv",
     script:
         "scripts/summarize_all.py"
+
+
+rule test_sga:
+    input:
+        expand(ISOLATE_FP / "mash" / "{sample}_sorted_winning.tab", sample=Samples),
+        expand(
+            ISOLATE_FP / "checkm" / "{sample}" / "quality_report.tsv", sample=Samples
+        ),
+        expand(ISOLATE_FP / "quast" / "{sample}" / "report.tsv", sample=Samples),
+        expand(ISOLATE_FP / "mlst" / "{sample}.mlst", sample=Samples),
+        #expand(ISOLATE_FP / "bakta" / "{sample}" / "{sample}.txt", sample=Samples),
+        expand(ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out", sample=Samples),
+        f"{ISOLATE_FP}/reports/shovill.report",
+        f"{ISOLATE_FP}/reports/mlst.report",
+        f"{ISOLATE_FP}/reports/checkm.report",
+        f"{ISOLATE_FP}/reports/amr.report",
+        #f"{ISOLATE_FP}/reports/bakta.report",
+        f"{ISOLATE_FP}/reports/mash.report",
+        f"{ISOLATE_FP}/final_summary.tsv",

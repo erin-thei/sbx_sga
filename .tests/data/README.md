@@ -17,7 +17,11 @@ databases:
 
 ```bash
 conda create -n sga_testdbs -c conda-forge -c bioconda \
+<<<<<<< HEAD
     mash bakta checkm2 genomad diamond prodigal
+=======
+    mash bakta checkm2 genomad sylph diamond prodigal
+>>>>>>> master
 conda activate sga_testdbs
 ```
 
@@ -30,6 +34,7 @@ conda activate sga_testdbs
 
 ### CheckM2
 1. Extract protein sequences from the genomes (e.g. with `prodigal`).
+<<<<<<< HEAD
 2. Create a DIAMOND database:
    ```bash
    diamond makedb --in proteins.faa -d checkm_test.dmnd
@@ -53,3 +58,34 @@ conda activate sga_testdbs
 2. The command generates only the indices required for `genomad end-to-end`, producing a very small database directory.
 
 Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, and `genomad_ref` to these paths.
+=======
+   ```bash
+   prodigal -i genome1.fna -a genome1.faa
+   prodigal -i genome2.fna -a genome2.faa
+   cat genome1.faa genome2.faa > species.faa
+   ```
+2. Create a DIAMOND database:
+   ```bash
+   diamond makedb --in species.faa -d checkm_test.dmnd
+   ```
+
+### Bakta
+Bakta has a number of different database components that each present their own challenges for miniaturization.
+
+### Genomad
+Genomad is another tricky one. Haven't found a way yet to create minimal versions of all the required components.
+
+### Sylph
+1. Construct a minimal Sylph database from the two genomes:
+   ```bash
+   sylph sketch genome1.fna genome2.fna
+   ```
+2. This produces a lightweight index suitable for `sylph classify`, keeping the directory under a few megabytes.
+
+Place the resulting files in `.tests/data/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, `genomad_ref`, and `sylph_ref` to these paths.
+
+### Snippy
+For the Snippy workflow, a small reference genome is required. You can reuse one of the genomes downloaded for the
+sample reads above. Copy the FASTA file into `.tests/data/` and name it `snippy_ref.fa`. Point the `snippy_ref`
+configuration option at this file when running the tests.
+>>>>>>> master
