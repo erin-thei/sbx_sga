@@ -16,7 +16,7 @@ bakta_dict = parse_file(filelines)
     cds_count,
     N50,
     genome_size,
-    gc
+    gc,
 ) = get_annotation_stats(bakta_dict)
 write_to_report(
     output,
@@ -29,5 +29,5 @@ write_to_report(
     cds_count,
     N50,
     genome_size,
-    gc
+    gc,
 )

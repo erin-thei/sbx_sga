@@ -27,17 +27,19 @@ def process_mash_line(line):
     hits = int(line_list[1].split("/")[0])
     return species, median_multiplicity, identity, hits
 
+
 def get_first_non_phage_hit(lines):
     for idx, line in enumerate(lines):
         if "phage" not in line.lower():
             return process_mash_line(line), idx
     return None, None
 
+
 def parse_report(top_lines):
     target_species = []
 
     result = get_first_non_phage_hit(top_lines)
-    
+
     if result == (None, None):
         return set()
 
@@ -62,6 +64,7 @@ def parse_report(top_lines):
                 target_species.append(species)
 
     return set(target_species)
+
 
 def contamination_call(target_set):
     mash_dict = {}

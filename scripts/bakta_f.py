@@ -23,7 +23,7 @@ def parse_file(filelines):
             "CDSs": "NA",
             "N50": "NA",
             "Length": "NA",
-            "GC": "NA"
+            "GC": "NA",
         }
 
 
@@ -46,7 +46,7 @@ def get_annotation_stats(parsed_dict):
         cds_count,
         N50,
         genome_size,
-        gc
+        gc,
     )
 
 
@@ -61,7 +61,7 @@ def write_to_report(
     cds_count,
     N50,
     genome_size,
-    gc
+    gc,
 ):
     sample = os.path.splitext(os.path.basename(genome))[0]
     with open(output, "w") as op:

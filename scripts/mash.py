@@ -8,7 +8,7 @@ output = snakemake.output[0]
 sample, filelines = open_report(sorted_report)
 
 if len(filelines) == 0:
-    empty_dict = {"":""}
+    empty_dict = {"": ""}
     write_report(output, sample, empty_dict)
 else:
     parsed_report = parse_report(filelines)

@@ -53,7 +53,7 @@ rule combine_sylph_summary:
     input:
         summaries=expand(
             ISOLATE_FP / "sylph" / "{sample}" / "{sample}.sylph", sample=Samples
-        )
+        ),
     output:
         all_summary=ISOLATE_FP / "reports" / "sylph.report",
     shell:
@@ -116,6 +116,7 @@ rule sga_mash:
             touch {output.win} {output.sort}
         fi
         """
+
 
 rule sga_shovill:
     input:
