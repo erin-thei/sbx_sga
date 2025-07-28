@@ -105,7 +105,7 @@ def test_get_annotation_stats():
         "4743",
         "123891",
         "5074653",
-        "50.8"
+        "50.8",
     )
 
 
@@ -133,7 +133,7 @@ def test_write_to_report(tmp_path):
         cds_count,
         n50,
         genome_size,
-        gc
+        gc,
     )
 
     assert os.path.exists(op_path)
