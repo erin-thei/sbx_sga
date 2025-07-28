@@ -17,11 +17,7 @@ databases:
 
 ```bash
 conda create -n sga_testdbs -c conda-forge -c bioconda \
-<<<<<<< HEAD
     mash bakta checkm2 genomad diamond prodigal
-=======
-    mash bakta checkm2 genomad sylph diamond prodigal
->>>>>>> master
 conda activate sga_testdbs
 ```
 
@@ -34,31 +30,6 @@ conda activate sga_testdbs
 
 ### CheckM2
 1. Extract protein sequences from the genomes (e.g. with `prodigal`).
-<<<<<<< HEAD
-2. Create a DIAMOND database:
-   ```bash
-   diamond makedb --in proteins.faa -d checkm_test.dmnd
-   ```
-
-### Bakta
-1. Create a new Bakta database populated only with the proteins from the test genomes. This keeps the data set tiny:
-   ```bash
-   mkdir bakta_db
-   bakta database init bakta_db
-   bakta database add-genomes genome1.fna genome2.fna --output bakta_db
-   ```
-2. Only the core taxonomy files and the two genomes are included so the directory remains under a few megabytes.
-
-### Genomad
-1. Build a miniature Genomad database using the same bacterial references:
-   ```bash
-   mkdir genomad_db
-   genomad build-database genome1.fna genome2.fna genomad_db/
-   ```
-2. The command generates only the indices required for `genomad end-to-end`, producing a very small database directory.
-
-Place the resulting files in a directory such as `.tests/data/databases/` and configure the tests to point `mash_ref`, `checkm_ref`, `bakta_ref`, and `genomad_ref` to these paths.
-=======
    ```bash
    prodigal -i genome1.fna -a genome1.faa
    prodigal -i genome2.fna -a genome2.faa
@@ -88,4 +59,3 @@ Place the resulting files in `.tests/data/` and configure the tests to point `ma
 For the Snippy workflow, a small reference genome is required. You can reuse one of the genomes downloaded for the
 sample reads above. Copy the FASTA file into `.tests/data/` and name it `snippy_ref.fa`. Point the `snippy_ref`
 configuration option at this file when running the tests.
->>>>>>> master
