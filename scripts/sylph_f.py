@@ -38,5 +38,6 @@ def get_stats(data_dict):
 # Writing it to the snakemake output
 def write_report(output, sample_name, taxo_abundance, contig):
     with open(output, "w") as op:
+        sample_name = os.path.basename(sample_name).split("_1.fastq.gz")[0]
         op.write(f"{sample_name}\t{taxo_abundance}\t{contig}\n")
     return output

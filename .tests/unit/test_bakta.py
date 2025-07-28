@@ -105,6 +105,7 @@ def test_get_annotation_stats():
         "4743",
         "123891",
         "5074653",
+        "50.8",
     )
 
 
@@ -119,6 +120,7 @@ def test_write_to_report(tmp_path):
     cds_count = 4743
     n50 = 123891
     genome_size = 5074653
+    gc = 50.8
 
     op_path = write_to_report(
         output,
@@ -131,12 +133,13 @@ def test_write_to_report(tmp_path):
         cds_count,
         n50,
         genome_size,
+        gc,
     )
 
     assert os.path.exists(op_path)
     with open(op_path, "r") as f:
         content = f.read()
         assert (
-            f"{os.path.splitext(os.path.basename(genome))[0]}\t{genome_size}\t{cds_count}\t{n50}\t{rrna_count}\t{trna_count}\t{tmrna_count}\t{crispr_count}\t{hypothetical_count}\n"
+            f"{os.path.splitext(os.path.basename(genome))[0]}\t{genome_size}\t{cds_count}\t{n50}\t{rrna_count}\t{trna_count}\t{tmrna_count}\t{crispr_count}\t{hypothetical_count}\t{gc}\n"
             in content
         )

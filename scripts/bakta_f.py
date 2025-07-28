@@ -23,6 +23,7 @@ def parse_file(filelines):
             "CDSs": "NA",
             "N50": "NA",
             "Length": "NA",
+            "GC": "NA",
         }
 
 
@@ -35,6 +36,7 @@ def get_annotation_stats(parsed_dict):
     cds_count = parsed_dict["CDSs"]
     N50 = parsed_dict["N50"]
     genome_size = parsed_dict["Length"]
+    gc = parsed_dict["GC"]
     return (
         crispr_count,
         hypothetical_count,
@@ -44,6 +46,7 @@ def get_annotation_stats(parsed_dict):
         cds_count,
         N50,
         genome_size,
+        gc,
     )
 
 
@@ -58,11 +61,12 @@ def write_to_report(
     cds_count,
     N50,
     genome_size,
+    gc,
 ):
     sample = os.path.splitext(os.path.basename(genome))[0]
     with open(output, "w") as op:
         op.write(
-            f"{sample}\t{genome_size}\t{cds_count}\t{N50}\t{rrna_count}\t{trna_count}\t{tmrna_count}\t{crispr_count}\t{hypothetical_count}\n"
+            f"{sample}\t{genome_size}\t{cds_count}\t{N50}\t{rrna_count}\t{trna_count}\t{tmrna_count}\t{crispr_count}\t{hypothetical_count}\t{gc}\n"
         )
     # The file is closed after this function, and only the path is returned.
     return output

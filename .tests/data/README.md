@@ -17,7 +17,7 @@ databases:
 
 ```bash
 conda create -n sga_testdbs -c conda-forge -c bioconda \
-    mash bakta checkm2 genomad sylph diamond prodigal
+    mash bakta checkm2 genomad diamond prodigal
 conda activate sga_testdbs
 ```
 

@@ -22,7 +22,7 @@ rule sga_sylph:
         rp2=QC_FP / "decontam" / "{sample}_2.fastq.gz",
     # pretend database exists
     output:
-        ISOLATE_FP / "sylph" / "{sample}.tsv",
+        report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv",
     # ignore params, log, benchmark, conda env for now
     threads: 8
     params:
@@ -35,16 +35,16 @@ rule sga_sylph:
         "envs/sylph.yml"
     shell:
         """
-        sylph profile {params.ref} -1 {input.rp1} -2 {input.rp2} -t {threads} > {output} 2> {log}
-        
+        sylph sketch -1 {input.rp1} -2 {input.rp2} -t 1 -d $(dirname {output.report})
+        sylph profile {params.ref} $(dirname {output.report})/*.sylsp -t {threads} -o {output.report} 2> {log}
         """
 
 
 rule sylph_report:
     input:
-        report=ISOLATE_FP / "sylph" / "{sample}.tsv",
+        report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv",
     output:
-        parsed_report=ISOLATE_FP / "sylph" / "reports" / "{sample}_report.tsv",
+        parsed_report=ISOLATE_FP / "sylph" / "{sample}" / "{sample}.sylph",
     script:
         "scripts/sylph.py"
 
@@ -52,7 +52,7 @@ rule sylph_report:
 rule combine_sylph_summary:
     input:
         summaries=expand(
-            ISOLATE_FP / "sylph" / "reports" / "{sample}_report.tsv", sample=Samples
+            ISOLATE_FP / "sylph" / "{sample}" / "{sample}.sylph", sample=Samples
         ),
     output:
         all_summary=ISOLATE_FP / "reports" / "sylph.report",
@@ -79,7 +79,8 @@ rule all_sga:
         # AMR Profiling
         expand(ISOLATE_FP / "abritamr" / "{sample}" / "amrfinder.out", sample=Samples),
         # Sylph
-        expand(ISOLATE_FP / "sylph" / "{sample}.tsv", sample=Samples),
+        #expand(ISOLATE_FP / "sylph" / "{sample}" / "{sample}.tsv", sample=Samples),
+        f"{ISOLATE_FP}/reports/sylph.report",
         f"{ISOLATE_FP}/reports/shovill.report",
         f"{ISOLATE_FP}/reports/mlst.report",
         f"{ISOLATE_FP}/reports/checkm.report",
@@ -106,9 +107,14 @@ rule sga_mash:
         "envs/mash.yml"
     shell:
         """
-        zcat  {input.reads} > {output.agg}
-        mash screen -w -p 8 {params.ref} {output.agg} > {output.win} 2> {log}
-        sort -gr {output.win} > {output.sort} 2>> {log}
+        zcat {input.reads} > {output.agg}
+
+        if [ -s {output.agg} ]; then
+            mash screen -w -p 8 {params.ref} {output.agg} > {output.win} 2> {log}
+            sort -gr {output.win} > {output.sort} 2>> {log}
+        else
+            touch {output.win} {output.sort}
+        fi
         """
 
 
@@ -339,7 +345,7 @@ rule combine_bakta_summary:
         bakta_report=ISOLATE_FP / "reports" / "bakta.report",
     shell:
         """
-        echo -e "Sample\\tGenome Size\\tCDS\\tN50\\trrna\\ttrna\\ttmrna\\tcrispr\\thypothetical" > {output.bakta_report}
+        echo -e "Sample\\tGenome Size\\tCDS\\tN50\\trrna\\ttrna\\ttmrna\\tcrispr\\thypothetical\\tGC Content" > {output.bakta_report}
         cat {input.reports} >> {output.bakta_report}
         """
 
