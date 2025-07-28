@@ -23,8 +23,7 @@ rule all_sga_virus:
         f"{ISOLATE_FP}/reports/genomad_plasmid_classification.report",
         f"{ISOLATE_FP}/reports/genomad_virus_classification.report",
         f"{ISOLATE_FP}/reports/genomad_plasmid_genes.report",
-        f"{ISOLATE_FP}/reports/genomad_virus_genes.report"
-
+        f"{ISOLATE_FP}/reports/genomad_virus_genes.report",
 
 
 rule sga_genomad_download_db:
@@ -70,7 +69,6 @@ rule sga_genomad_end_to_end:
         / "{sample}"
         / "{sample}_summary"
         / "{sample}_virus_genes.tsv",
-
     log:
         LOG_FP / "genomad_end_to_end_{sample}.log",
     benchmark:
